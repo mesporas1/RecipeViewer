@@ -1,0 +1,28 @@
+{
+  "name": "RecipeViewer",
+  "version": "1.0.0",
+  "description": "Created with CodeSandbox",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "DEBUG=app,app:* node index.js"
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mesporas1/RecipeViewer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mesporas1/RecipeViewer/issues"
+  },
+  "homepage": "https://github.com/mesporas1/RecipeViewer#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "cheerio": "^1.0.0-rc.3",
+    "debug": "^4.1.1",
+    "express": "^4.17.1"
+  }
+}
