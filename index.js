@@ -16,15 +16,28 @@ app.listen(PORT, () => {
   debug(`Node listening on port ${PORT}`);
 });
 
-app.get("*", function(request, response) {
+app.get("*", async function(request, response) {
   const recipeUrl = "https://thewoksoflife.com/homemade-chinese-egg-noodles/";
-  debug(recipeUrl);
-  const $ = axios.get(recipeUrl).then(function(data) {
-    debug(data);
-    return cheerio.load(data);
-  });
-  debug('Why')
-  response.send($);
+  //debug(recipeUrl);
+  const fetchData = async () => {
+    const result = await axios.get(recipeUrl);
+    //debug(result)
+    return cheerio.load(result.data);
+  }
+ 
+  const getResults = async () => {
+    const $ = await fetchData();
+    /*$('div').filter(function(i, el){
+      return $(this).attr('id') === /wprm-recipe-container-\d/
+    })*/
+    const result = $('div', '#wprm-recipe-container-37318').html();
+    //debug(result)
+    return result;
+
+  }
+  results = await getResults();
+  //debug(results)
+  response.send(results);
 });
 
 //create a server object:
