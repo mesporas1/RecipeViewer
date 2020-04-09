@@ -17,7 +17,7 @@ app.listen(PORT, () => {
 });
 
 app.get("*", async function(request, response) {
-  const recipeUrl = "https://thewoksoflife.com/homemade-chinese-egg-noodles/";
+  const recipeUrl = "https://thewoksoflife.com/vegetable-yakisoba//";
   //debug(recipeUrl);
   const fetchData = async () => {
     const result = await axios.get(recipeUrl);
@@ -27,12 +27,15 @@ app.get("*", async function(request, response) {
  
   const getResults = async () => {
     const $ = await fetchData();
-    /*$('div').filter(function(i, el){
-      return $(this).attr('id') === /wprm-recipe-container-\d/
-    })*/
-    const result = $('div', '#wprm-recipe-container-37318').html();
+    const recipeSite = $('div').attr('class', 'wprm-recipe-container').html();
+    const recipeParser = /wprm-recipe-container-\d+/
+    const recipeId = recipeParser.exec(recipeSite)
+
+    const recipe = $('div', '#' + recipeId.toString()).html();
+    debug(recipe);
+
     //debug(result)
-    return result;
+    return recipe;
 
   }
   results = await getResults();
