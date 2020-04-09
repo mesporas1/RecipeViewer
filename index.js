@@ -30,9 +30,8 @@ app.get("*", async function(request, response) {
     const recipeSite = $('div').attr('class', 'wprm-recipe-container').html();
     const recipeParser = /wprm-recipe-container-\d+/
     const recipeId = recipeParser.exec(recipeSite)
-
-    const recipe = $('div', '#' + recipeId.toString()).html();
-    debug(recipe);
+    const recipe = $('#' + recipeId.toString()).html();
+    //const ingredients = $('.wprm-recipe-ingredients-container').html();
 
     //debug(result)
     return recipe;
