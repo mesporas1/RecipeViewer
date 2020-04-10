@@ -43,8 +43,8 @@ app.get("*", async function(request, response) {
     })
     debug(recipeSteps)
     //debug(result)
-    //return {ingredients, recipeSteps};
-    return recipe;
+    return {ingredients, recipeSteps};
+    //return recipe;
   }
   results = await getResults();
   //debug(results)
