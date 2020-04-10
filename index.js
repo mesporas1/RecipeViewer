@@ -16,8 +16,10 @@ app.listen(PORT, () => {
   debug(`Node listening on port ${PORT}`);
 });
 
+
+// Woks of Life Recipe Scraper
 app.get("*", async function(request, response) {
-  const recipeUrl = "https://thewoksoflife.com/vegetable-yakisoba//";
+  const recipeUrl = "https://thewoksoflife.com/butterfly-shrimp-bacon/";
   //debug(recipeUrl);
   const fetchData = async () => {
     const result = await axios.get(recipeUrl);
@@ -31,11 +33,18 @@ app.get("*", async function(request, response) {
     const recipeParser = /wprm-recipe-container-\d+/
     const recipeId = recipeParser.exec(recipeSite)
     const recipe = $('#' + recipeId.toString()).html();
-    //const ingredients = $('.wprm-recipe-ingredients-container').html();
-
+    const ingredients = [];
+    $('.wprm-recipe-ingredient', '.wprm-recipe-ingredients').each(function(i,elem){
+      ingredients[i] = $(this).text();
+    });
+    let recipeSteps = [];
+    $('.wprm-recipe-instruction', '.wprm-recipe-instructions').each(function(i,elem){
+      recipeSteps += $(this).text();
+    })
+    debug(recipeSteps)
     //debug(result)
+    //return {ingredients, recipeSteps};
     return recipe;
-
   }
   results = await getResults();
   //debug(results)
