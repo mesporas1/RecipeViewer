@@ -5,56 +5,41 @@ const debug = require("debug")("app");
 const axios = require("axios");
 const cheerio = require("cheerio");
 
-const app = express();
-const PORT = 5000;
+const isDev = process.env.NODE_ENV !== 'production';
+const PORT = process.env.PORT || 5000;
 
-//app.use(express.static(path.resolve(__dirname, "../static")));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+// Multi-process to utilize all CPU cores.
+if (!isDev && cluster.isMaster) {
+  console.error(`Node cluster master ${process.pid} is running`);
 
-app.listen(PORT, () => {
-  debug(`Node listening on port ${PORT}`);
-});
-
-
-// Woks of Life Recipe Scraper
-app.get("*", async function(request, response) {
-  const recipeUrl = "https://thewoksoflife.com/butterfly-shrimp-bacon/";
-  //debug(recipeUrl);
-  const fetchData = async () => {
-    const result = await axios.get(recipeUrl);
-    //debug(result)
-    return cheerio.load(result.data);
+  // Fork workers.
+  for (let i = 0; i < numCPUs; i++) {
+    cluster.fork();
   }
- 
-  const getResults = async () => {
-    const $ = await fetchData();
-    const recipeSite = $('div').attr('class', 'wprm-recipe-container').html();
-    const recipeParser = /wprm-recipe-container-\d+/
-    const recipeId = recipeParser.exec(recipeSite)
-    const recipe = $('#' + recipeId.toString()).html();
-    const ingredients = [];
-    $('.wprm-recipe-ingredient', '.wprm-recipe-ingredients').each(function(i,elem){
-      ingredients[i] = $(this).text();
-    });
-    let recipeSteps = [];
-    $('.wprm-recipe-instruction', '.wprm-recipe-instructions').each(function(i,elem){
-      recipeSteps += $(this).text();
-    })
-    debug(recipeSteps)
-    //debug(result)
-    return {ingredients, recipeSteps};
-    //return recipe;
-  }
-  results = await getResults();
-  //debug(results)
-  response.send(results);
-});
 
-//create a server object:
-/*http
-  .createServer(function(req, res) {
-    res.write("Hello World!"); //write a response to the client
-    res.end(); //end the response
-  })
-  .listen(8080); //the server object listens on port 8080*/
+  cluster.on('exit', (worker, code, signal) => {
+    console.error(`Node cluster worker ${worker.process.pid} exited: code ${code}, signal ${signal}`);
+  });
+} else {
+  const app = express();
+
+
+  app.use(express.static(path.resolve(__dirname, "../react-ui/build")));
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+
+  app.listen(PORT, () => {
+    debug(`Node ${isDev ? 'dev server' : 'cluster worker '+process.pid}: listening on port ${PORT}`);
+  });
+
+  const recRouter = require('./routes/recipeRoutes')();
+
+
+  app.use('/recipe', recRouter);
+
+
+  app.get('*', function(request, response) {
+    response.sendFile(path.resolve(__dirname, '../react-ui/build', 'index.html'));
+  });
+
+}
