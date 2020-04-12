@@ -2,15 +2,15 @@ const express = require('express');
 const debug = require('debug')('app:recipeRoutes');
 const axios = require("axios");
 const cheerio = require("cheerio");
-if (process.env.NODE_ENV !== 'production') require('dotenv').config()
+//if (process.env.NODE_ENV !== 'production') require('dotenv').config()
 
 const recipeRouter = express.Router();
 
 function router(nav) {
-  recipeRouter.route('/getWOLRecipe')
+  recipeRouter.route('/getRecipe')
   // Woks of Life Recipe Scraper
     .post(async function(request, response) {
-            const recipeUrl = "https://thewoksoflife.com/butterfly-shrimp-bacon/";
+            const {recipeUrl} = request.body;
             //debug(recipeUrl);
             const fetchData = async () => {
               const result = await axios.get(recipeUrl);
@@ -26,11 +26,11 @@ function router(nav) {
               const recipe = $('#' + recipeId.toString()).html();
               const ingredients = [];
               $('.wprm-recipe-ingredient', '.wprm-recipe-ingredients').each(function(i,elem){
-                ingredients[i] = $(this).text();
+                ingredients[i] = $(this).html();
               });
               let recipeSteps = [];
               $('.wprm-recipe-instruction', '.wprm-recipe-instructions').each(function(i,elem){
-                recipeSteps += $(this).text();
+                recipeSteps[i] = $(this).html();
               })
               debug(recipeSteps)
               //debug(result)
@@ -38,7 +38,7 @@ function router(nav) {
               //return recipe;
             }
             results = await getResults();
-            //debug(results)
+            debug(results)
             response.json(results)
           }
     ) 
