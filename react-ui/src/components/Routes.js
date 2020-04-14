@@ -11,7 +11,7 @@ import Categories from "./Categories";
 export default function Routes({ appProps }) {
   return (
     <Switch>
-      <AppliedRoute path="/" exact component={LoginForm} appProps={appProps}/>
+      <AppliedRoute path="/" exact component={LoginForm} appProps={appProps} />
       <AppliedRoute path="/banks" exact component={Banks} appProps={appProps} />
       <AppliedRoute path="/categories" exact component={Categories} appProps={appProps} />
       <Route component={NotFound} />
