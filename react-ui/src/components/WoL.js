@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../App.css';
+import Ingredients from './Ingredients'
+import RecipeSteps from './RecipeSteps'
 const axios = require('axios');
 axios.defaults.withCredentials = true;
 
@@ -26,8 +28,8 @@ function WoL(props) {
             })
             console.log(response)
             const { recipeSteps, ingredients } = response.data;
-            setRecipeSteps(recipeSteps);
-            setIngredients(ingredients);
+            setRecipeSteps(<RecipeSteps steps={recipeSteps} />);
+            setIngredients(<Ingredients ingredients={ingredients} />);
             // setIsFetching(true);
         }
         catch (e) {
@@ -44,7 +46,7 @@ function WoL(props) {
             <button type="submit">View recipe</button>
         </form>
         <h2>Ingredients</h2>
-        <div>{ingredients}</div>
+        {ingredients}
         <h2>Recipe Steps</h2>
         <div>{recipeSteps}</div>
     </div>

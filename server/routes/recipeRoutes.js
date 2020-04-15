@@ -26,11 +26,11 @@ function router() {
         // const recipe = $('#' + recipeId.toString()).html();
         const ingredients = [];
         $('.wprm-recipe-ingredient', '.wprm-recipe-ingredients').each(function getIngredients(i) {
-          ingredients[i] = $(this).html();
+          ingredients[i] = $(this).text();
         });
         const recipeSteps = [];
         $('.wprm-recipe-instruction', '.wprm-recipe-instructions').each(function getRecipeSteps(i) {
-          recipeSteps[i] = $(this).html();
+          recipeSteps[i] = $(this).text();
         });
         debug(recipeSteps);
         // debug(result)
