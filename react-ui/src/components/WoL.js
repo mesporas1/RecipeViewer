@@ -9,46 +9,53 @@ function WoL(props) {
 
     const [ingredients, setIngredients] = useState('');
     const [recipeSteps, setRecipeSteps] = useState('');
-    const [recipeUrl, setRecipeUrl] = useState('https://thewoksoflife.com/homemade-chinese-egg-noodles/');
+    const [recipeLoaded, setRecipeLoaded] = useState(false);
+    const [ingredientHeight, setIngredientHeight] = useState({})
+    const [recipeHeight, setRecipeHeight] = useState({})
+    const [recipeUrl, setRecipeUrl] = useState('https://thewoksoflife.com/drunken-noodles-pad-kee-mao/');
     const [isFetching, setIsFetching] = useState(false);
-
-    useEffect(() => {
-        const fetchRecipe = async () => {
+    
+    /*useEffect(() => {
+        const fetchRecipe = async () => {   
             setIsFetching(false)
         }
         fetchRecipe()
-    }, [isFetching]);
+    }, [isFetching]);*/
 
-    async function getRecipe(event) {
-        event.preventDefault();
-
+    async function getRecipe() {
+        //event.preventDefault();
+        
         try {
+            setIsFetching(true);
             const response = await axios.post('/recipe/getRecipe', {
                 recipeUrl: recipeUrl
             })
             console.log(response)
             const { recipeSteps, ingredients } = response.data;
+            setIngredientHeight({height:'30%'})
+            setRecipeHeight({height:'70%'})
             setRecipeSteps(<RecipeSteps steps={recipeSteps} />);
             setIngredients(<Ingredients ingredients={ingredients} />);
-            // setIsFetching(true);
+            setRecipeLoaded(true);
+            //setIsFetching(false);
         }
         catch (e) {
             console.log(e);
         }
     }
-    return <div>
-        <h1>Woks of Life</h1>
-        <form onSubmit={getRecipe}>
+    return <div className={"container"}>
+        {isFetching ? recipeLoaded ? null : <div> Waiting.. </div> : <div className={"header"}>
+        <h1>Enter Recipe Url</h1>
             <input type="text"
                 value={recipeUrl}
                 onChange={event => setRecipeUrl(event.target.value)}
             ></input>
-            <button type="submit">View recipe</button>
-        </form>
-        <h2>Ingredients</h2>
-        {ingredients}
-        <h2>Recipe Steps</h2>
-        <div>{recipeSteps}</div>
+            <button onClick={getRecipe}>View recipe</button>
+            </div>
+        }
+        
+        <div className={"ingredient-list"} style={ingredientHeight}>{ingredients}</div>
+        <div className={"recipe-step"} style={recipeHeight}>{recipeSteps}</div>
     </div>
 
 }

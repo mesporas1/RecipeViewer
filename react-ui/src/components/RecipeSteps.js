@@ -7,11 +7,14 @@ function RecipeSteps(props) {
 
     console.log(props.ingredients)
     const steps = props.steps.map(function (step) {
-        return <li dangerouslySetInnerHTML={{ __html: step }}></li>
+    return <li>{step}</li>
     })
-    return <ol class="ingredients">
+    return <div>
+        <h2>Recipe Steps</h2>
+        <ol>
         {steps}
-    </ol>
+        </ol>
+        </div>
 
 }
 

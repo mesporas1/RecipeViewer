@@ -7,11 +7,14 @@ function Ingredients(props) {
 
     console.log(props.ingredients)
     const ingredientList = props.ingredients.map(function (ingredient) {
-        return <li dangerouslySetInnerHTML={{ __html: ingredient }}></li>
+    return <div><input type="checkbox"></input><label>{ingredient}</label></div>
     })
-    return <ol class="ingredients">
-        {ingredientList}
-    </ol>
+    return <div>
+        <h2>Ingredients</h2>
+        
+        <div>{ingredientList}</div>
+    
+    </div>
 
 }
 

@@ -1,5 +1,7 @@
+@import-normalize;
+
 .App {
-  text-align: center;
+  text-align: justify;
 }
 
 .App-logo {
@@ -35,4 +37,43 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.container {
+  font-size: 1.5em;
+  min-height: 300px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto;
+  grid-template-rows: auto;
+  grid-gap: 10px;
+  grid-template-areas:
+      "ingredients"
+      "recipe";
+}
+
+.ingredient-list {
+  position: fixed;
+  grid-area: ingredients;
+  background: gray;
+  color: white;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow:scroll
+}
+
+.recipe-step {
+  position: fixed;
+  grid-area: recipe;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  overflow: scroll;
+}
+
+input[type=checkbox]:checked + label {
+  text-decoration: line-through;
 }
