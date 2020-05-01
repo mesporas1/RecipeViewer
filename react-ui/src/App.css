@@ -40,7 +40,7 @@
 }
 
 .container {
-  font-size: 1.5em;
+  font-size: 1em;
   min-height: 300px;
   width: 100%;
   display: grid;
@@ -49,6 +49,7 @@
   grid-gap: 10px;
   grid-template-areas:
       "ingredients"
+      "slider"
       "recipe";
 }
 
@@ -61,6 +62,7 @@
   left: 0;
   right: 0;
   width: 100%;
+  z-index: 2;
   overflow:scroll
 }
 
@@ -71,9 +73,29 @@
   left: 0;
   right: 0;
   width: 100%;
+  z-index: 1;
   overflow: scroll;
 }
 
 input[type=checkbox]:checked + label {
   text-decoration: line-through;
+}
+
+.slider{
+  position:fixed;
+  width: 100%;
+  grid-area: slider;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.draggable{
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  position:fixed;
+  z-index: 2;
 }
