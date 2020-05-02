@@ -48,9 +48,9 @@
   grid-template-rows: auto;
   grid-gap: 10px;
   grid-template-areas:
-      "ingredients"
-      "slider"
-      "recipe";
+    "ingredients"
+    "slider"
+    "recipe";
 }
 
 .ingredient-list {
@@ -63,7 +63,7 @@
   right: 0;
   width: 100%;
   z-index: 2;
-  overflow:scroll
+  overflow: scroll;
 }
 
 .recipe-step {
@@ -77,25 +77,35 @@
   overflow: scroll;
 }
 
-input[type=checkbox]:checked + label {
+input[type="checkbox"]:checked + label {
   text-decoration: line-through;
 }
 
-.slider{
-  position:fixed;
+.slider {
+  position: fixed;
   width: 100%;
   grid-area: slider;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 2;
+  text-align: center;
+  background: #dcdcdc;
+  border-color: black;
+  border-width: 2px;
+  border-style: solid;
 }
 
-.draggable{
+.draggable {
   width: 100%;
   bottom: 0;
   left: 0;
   right: 0;
-  position:fixed;
+  position: fixed;
   z-index: 2;
+}
+
+.new-recipe {
+  position: relative;
+  right: 0px;
 }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import '../App.css';
+import bar from '../images/bar.png'
 import Ingredients from './Ingredients'
 import RecipeSteps from './RecipeSteps'
 const axios = require('axios');
@@ -16,7 +17,7 @@ function WoL(props) {
     const [sliderGrabbed, setSliderGrabbed] = useState(false);
     const [recipeUrl, setRecipeUrl] = useState('https://thewoksoflife.com/drunken-noodles-pad-kee-mao/');
     const [isFetching, setIsFetching] = useState(false);
-    
+
     /*useEffect(() => {
         const fetchRecipe = async () => {   
             setIsFetching(false)
@@ -26,7 +27,7 @@ function WoL(props) {
 
     async function getRecipe() {
         //event.preventDefault();
-        
+
         try {
             setIsFetching(true);
             const response = await axios.post('/recipe/getRecipe', {
@@ -34,9 +35,9 @@ function WoL(props) {
             })
             console.log(response)
             const { recipeSteps, ingredients } = response.data;
-            setIngredientHeight({height:'25%'})
-            setRecipeHeight({height:'75%'})
-            setSliderHeight({bottom: '25%'})
+            setIngredientHeight({ height: '25%' })
+            setRecipeHeight({ height: '75%' })
+            setSliderHeight({ bottom: '25%' })
             setRecipeSteps(<RecipeSteps steps={recipeSteps} />);
             setIngredients(<Ingredients ingredients={ingredients} />);
             setRecipeLoaded(true);
@@ -47,51 +48,60 @@ function WoL(props) {
         }
     }
 
-    function grabSlider(event){
-        event.preventDefault();
-        setSliderGrabbed(true); 
+    function grabSlider(event) {
+        // event.preventDefault();
+        setSliderGrabbed(true);
     }
 
-    function moveSlider(event){
-        event.preventDefault();
-        let newSliderHeight;
+    function moveSlider(event) {
+        //event.preventDefault();
+        let newRecipeStepsHeight;
+        let draggable
         const screenSize = window.screen.height;
-        const oldSliderHeight = event.changedTouches[0].pageY;
-        if (sliderGrabbed == true){
-            newSliderHeight = screenSize - event.changedTouches[0].pageY;
-            console.log(event.changedTouches)
-            console.log(newSliderHeight);
-            console.log(oldSliderHeight)
-            console.log(Math.abs(newSliderHeight - oldSliderHeight))
-            setSliderHeight({bottom:newSliderHeight - 20})
-            setIngredientHeight({height: newSliderHeight - 20})
-            setRecipeHeight({height: screenSize - newSliderHeight})
-        }   
+
+        if (sliderGrabbed == true) {
+            newRecipeStepsHeight = screenSize - event.changedTouches[0].pageY;
+            draggable = newRecipeStepsHeight - 20;
+            if (draggable > 0) {
+                setSliderHeight({ bottom: draggable })
+                setIngredientHeight({ height: draggable })
+                setRecipeHeight({ height: screenSize - newRecipeStepsHeight })
+            }
+
+        }
     }
 
-    function releaseSlider(event){
-        event.preventDefault();
+    function releaseSlider(event) {
+        //event.preventDefault();
         setSliderGrabbed(false);
     }
 
+    function newRecipe(event) {
+        setRecipeLoaded(false);
+        setRecipeUrl('');
+        setIsFetching(false);
+    }
     return <div className={"container"}>
         {isFetching ? recipeLoaded ? null : <div> Waiting.. </div> : <div className={"header"}>
-        <h1>Enter Recipe Url</h1>
+            <h1>Enter Recipe Url</h1>
             <input type="text"
                 value={recipeUrl}
                 onChange={event => setRecipeUrl(event.target.value)}
             ></input>
             <button onClick={getRecipe}>View recipe</button>
-            </div>
+        </div>
         }
-        
+
         {recipeLoaded ?
             <div>
-            <div className={"recipe-step"} style={recipeHeight}>{recipeSteps}</div>
-            <div class={"slider"}  onTouchStart={grabSlider} onTouchEnd={releaseSlider} onTouchMove={moveSlider} style={sliderHeight}>Slider</div>
-            <div className={"ingredient-list"} style={ingredientHeight}>{ingredients}</div>
+                <div className={"recipe-step"} style={recipeHeight}>
+                    <button class={"new-recipe"} onClick={newRecipe}>New Recipe?</button>
+                    {recipeSteps}
+                </div>
+                <div class={"slider"} onTouchStart={grabSlider} onTouchEnd={releaseSlider} onTouchMove={moveSlider} style={sliderHeight}><img src={bar} alt="Slider Bar" /></div>
+                <div className={"ingredient-list"} style={ingredientHeight}>{ingredients}</div>
             </div>
-            : null }
+            : null}
     </div>
 
 }

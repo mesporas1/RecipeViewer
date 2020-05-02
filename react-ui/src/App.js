@@ -1,12 +1,12 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Wol from './components/WoL'
+import RecipeLink from './components/RecipeLink'
 
 function App() {
   return (
     <div className="App">
-      <Wol></Wol>
+      <RecipeLink></RecipeLink>
     </div>
   );
 }
