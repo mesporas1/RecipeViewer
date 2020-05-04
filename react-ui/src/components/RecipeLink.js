@@ -4,6 +4,7 @@ import bar from '../images/bar.png'
 import Ingredients from './Ingredients'
 import RecipeSteps from './RecipeSteps'
 const axios = require('axios');
+const recipeSites = require('../recipeSites.js')
 axios.defaults.withCredentials = true;
 
 function WoL(props) {
@@ -11,12 +12,13 @@ function WoL(props) {
     const [ingredients, setIngredients] = useState('');
     const [recipeSteps, setRecipeSteps] = useState('');
     const [recipeLoaded, setRecipeLoaded] = useState(false);
-    const [ingredientHeight, setIngredientHeight] = useState({})
-    const [recipeHeight, setRecipeHeight] = useState({})
-    const [sliderHeight, setSliderHeight] = useState({})
+    const [ingredientHeight, setIngredientHeight] = useState({ height: '25%' })
+    const [recipeHeight, setRecipeHeight] = useState({ height: '75%' })
+    const [sliderHeight, setSliderHeight] = useState({ bottom: '25%' })
     const [sliderGrabbed, setSliderGrabbed] = useState(false);
-    const [recipeUrl, setRecipeUrl] = useState('https://thewoksoflife.com/drunken-noodles-pad-kee-mao/');
+    const [recipeUrl, setRecipeUrl] = useState('');
     const [isFetching, setIsFetching] = useState(false);
+    const [error, setError] = useState(null);
 
     /*useEffect(() => {
         const fetchRecipe = async () => {   
@@ -30,17 +32,22 @@ function WoL(props) {
 
         try {
             setIsFetching(true);
+            setError(null)
             const response = await axios.post('/recipe/getRecipe', {
                 recipeUrl: recipeUrl
             })
             console.log(response)
-            const { recipeSteps, ingredients } = response.data;
-            setIngredientHeight({ height: '25%' })
-            setRecipeHeight({ height: '75%' })
-            setSliderHeight({ bottom: '25%' })
-            setRecipeSteps(<RecipeSteps steps={recipeSteps} />);
-            setIngredients(<Ingredients ingredients={ingredients} />);
-            setRecipeLoaded(true);
+            if (response.data.error){
+                setIsFetching(false);
+                setError("Error: " + response.data.error)
+                alert("Error: " + response.data.error + ". Returning to page.")
+            }
+            else {
+                const { recipeSteps, ingredients } = response.data;
+                setRecipeSteps(<RecipeSteps steps={recipeSteps} />);
+                setIngredients(<Ingredients ingredients={ingredients} />);
+                setRecipeLoaded(true);
+            }
             //setIsFetching(false);
         }
         catch (e) {
@@ -87,11 +94,16 @@ function WoL(props) {
             <input type="text"
                 value={recipeUrl}
                 onChange={event => setRecipeUrl(event.target.value)}
+                placeholder='e.g. https://thewoksoflife.com/***'
             ></input>
             <button onClick={getRecipe}>View recipe</button>
+            <h2>Supported Sites</h2>
+            <ol>{recipeSites.map(function(site, index){
+                return <li key={index}>{site}</li>
+            })}</ol>
         </div>
         }
-
+        { error ? <div>{error}</div> : null}
         {recipeLoaded ?
             <div>
                 <div className={"recipe-step"} style={recipeHeight}>
